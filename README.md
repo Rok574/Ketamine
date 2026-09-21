@@ -65,3 +65,5 @@ Ketamine is licensed under the **GNU General Public License v3.0**. See [LICENSE
 ## Disclaimer
 
 Ketamine is provided for **research and educational purposes**. Modifying system configuration can cause unexpected behavior. Use it at your own risk. See [DISCLAIMER.md](DISCLAIMER.md) for the full text.
+
+Ketamine has no official successors, or continuations. Any project claims to be a continuation is just a fork anyone can do. I do not condone use of them (f.e. WorkPlot) and the only person whos responsible for your device if the person who made the fork.
