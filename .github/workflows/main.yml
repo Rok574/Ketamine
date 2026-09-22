@@ -1,0 +1,51 @@
+name: Build Ketamine
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Ketamine
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: |
+          brew untap aws/tap || true
+          brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -project Ketamine.xcodeproj \
+            -scheme Ketamine \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package IPA
+        run: |
+          mkdir Payload
+          cp -R "$(xcodebuild -project Ketamine.xcodeproj -scheme Ketamine -configuration Release -sdk iphoneos -showBuildSettings | grep TARGET_BUILD_DIR | head -1 | cut -d '=' -f2 | xargs)/KetamineDeglass.app" Payload/
+          zip -r KetamineDeglass.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: KetamineDeglass-IPA
+          path: KetamineDeglass.ipa
